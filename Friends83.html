@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Friendship Diagnostic Tool v8.3</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: #eceff1; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .card { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); width: 380px; text-align: center; border-top: 5px solid #607d8b; }
+        h2 { color: #455a64; font-size: 1.4rem; }
+        .hidden { display: none; }
+        .question { text-align: left; margin: 15px 0; font-size: 0.9rem; color: #555; }
+        input, select { width: 100%; padding: 10px; margin: 8px 0; border: 1px solid #cfd8dc; border-radius: 4px; box-sizing: border-box; }
+        button { background: #607d8b; color: white; border: none; padding: 12px 20px; border-radius: 4px; cursor: pointer; width: 100%; font-weight: bold; margin-top: 10px; }
+        button:hover { background: #455a64; }
+        #terminal { background: #263238; color: #81c784; padding: 15px; border-radius: 4px; text-align: left; font-family: 'Courier New', monospace; font-size: 0.85rem; min-height: 120px; }
+    </style>
+</head>
+<body>
+
+<div id="step1" class="card">
+    <h2>🛠 System Login</h2>
+    <p style="font-size: 0.8rem; color: #888;">Cần xác minh danh tính</p>
+    <div class="question">Nhập biệt danh của bạn:</div>
+    <input type="text" id="nickname" placeholder="Ví dụ: sâu lười...">
+    <button onclick="nextStep(1)">Bắt đầu chẩn đoán</button>
+</div>
+
+<div id="step2" class="card hidden">
+    <h2>📊 Diagnostic Survey</h2>
+    <div class="question">1. Mức độ "muốn đấm" H đó giờ ?</div>
+    <select>
+        <option>0% - Đang vui</option>
+        <option>20% - Hơi ngứa mắt tí</option>
+        <option>50% - Đấm ngay bây giờ</option>
+        <option>80% - Đấm xong còn muốn đấm tiếp</option>
+        <option>100% - Đấm bỏ bu nó luôn</option>
+    </select>
+    <div class="question">2. Trạng thái "nghiệp" hiện tại:</div>
+    <select>
+        <option>Đã tu tâm dưỡng tính</option>
+        <option>Vẫn hay cà khịa</option>
+        <option>Nghiệp tụ vành môi</option>
+    </select>
+    <button onclick="nextStep(2)">Gửi báo cáo</button>
+</div>
+
+<div id="step3" class="card hidden">
+    <h2>✅ Diagnostic Complete</h2>
+    <div id="terminal"></div>
+    <p style="color: #607d8b; font-weight: bold; margin-top: 15px;">🎁 Quà 8/3: Một ly Highland/Starbucks tùy chọn, nhắn tin để lấy code!</p>
+</div>
+
+<script>
+    function nextStep(current) {
+        if (current === 1) {
+            const nick = document.getElementById('nickname').value;
+            if (!nick) { alert("Nhập đại cái tên vào đi!"); return; }
+            document.getElementById('step1').classList.add('hidden');
+            document.getElementById('step2').classList.remove('hidden');
+        } else if (current === 2) {
+            document.getElementById('step2').classList.add('hidden');
+            document.getElementById('step3').classList.remove('hidden');
+            runTerminal();
+        }
+    }
+
+    function runTerminal() {
+        const lines = [
+            "> Connecting to server...",
+            "> Fetching_data.json",
+            "> Status: [CONFIRMED]",
+            "> Processing wish...",
+            "> Happy March 8th!",
+            "> Chúc bạn 8/3 xinh đẹp rạng rỡ, hoàn thành được các mục tiêu đặt ra và luôn giữ nụ cười trên môi nhé!",
+            "> Connection closed."
+        ];
+        let i = 0;
+        const term = document.getElementById('terminal');
+        
+        function type() {
+            if (i < lines.length) {
+                term.innerHTML += lines[i] + "<br>";
+                i++;
+                setTimeout(type, 800);
+            }
+        }
+        type();
+    }
+</script>
+</body>
+</html>
