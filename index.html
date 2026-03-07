@@ -6,14 +6,42 @@
     <title>Friendship Diagnostic Tool v8.3</title>
     <style>
         body { font-family: 'Segoe UI', Tahoma, sans-serif; background: #eceff1; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-        .card { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); width: 380px; text-align: center; border-top: 5px solid #607d8b; }
+        .card { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); width: 380px; text-align: center; border-top: 5px solid #607d8b; transition: all 0.5s ease; }
         h2 { color: #455a64; font-size: 1.4rem; }
         .hidden { display: none; }
         .question { text-align: left; margin: 15px 0; font-size: 0.9rem; color: #555; }
         input, select { width: 100%; padding: 10px; margin: 8px 0; border: 1px solid #cfd8dc; border-radius: 4px; box-sizing: border-box; }
         button { background: #607d8b; color: white; border: none; padding: 12px 20px; border-radius: 4px; cursor: pointer; width: 100%; font-weight: bold; margin-top: 10px; }
         button:hover { background: #455a64; }
-        #terminal { background: #263238; color: #81c784; padding: 15px; border-radius: 4px; text-align: left; font-family: 'Courier New', monospace; font-size: 0.85rem; min-height: 120px; }
+        
+        /* Chỉnh sửa Terminal để chứa được ảnh */
+        #terminal { 
+            background: #263238; 
+            color: #81c784; 
+            padding: 15px; 
+            border-radius: 4px; 
+            text-align: left; 
+            font-family: 'Courier New', monospace; 
+            font-size: 0.85rem; 
+            min-height: 120px; 
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        /* Hiệu ứng ảnh hiện lên */
+        #flower-img {
+            max-width: 150px;
+            margin: 10px auto 0 auto;
+            border-radius: 8px;
+            display: none; /* Ẩn lúc đầu */
+            animation: fadeIn 2s forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
     </style>
 </head>
 <body>
@@ -46,7 +74,10 @@
 
 <div id="step3" class="card hidden">
     <h2>✅ Diagnostic Complete</h2>
-    <div id="terminal"></div>
+    <div id="terminal">
+        <div id="terminal-content"></div>
+        <img id="flower-img" src="hoa.jpg" alt="Bó hoa tặng bạn">
+    </div>
     <p style="color: #607d8b; font-weight: bold; margin-top: 15px;">🎁 Quà 8/3: Một con thú bông, nhắn tin để lấy code!</p>
 </div>
 
@@ -75,13 +106,19 @@
             "> Connection closed."
         ];
         let i = 0;
-        const term = document.getElementById('terminal');
+        const termContent = document.getElementById('terminal-content');
+        const flower = document.getElementById('flower-img');
         
         function type() {
             if (i < lines.length) {
-                term.innerHTML += lines[i] + "<br>";
+                termContent.innerHTML += lines[i] + "<br>";
                 i++;
                 setTimeout(type, 800);
+            } else {
+                // Khi chạy xong chữ thì hiện hoa lên
+                flower.style.display = "block";
+                // Mở rộng thẻ card để vừa ảnh
+                document.querySelector('.card').style.width = "420px";
             }
         }
         type();
@@ -89,4 +126,3 @@
 </script>
 </body>
 </html>
-
