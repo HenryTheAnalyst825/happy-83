@@ -3,167 +3,204 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Friendship Diagnostic Tool v8.3</title>
+    <title>Gửi người tớ thích ❤️</title>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: #eceff1; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 20px; box-sizing: border-box; }
-        .card { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); width: 380px; text-align: center; border-top: 5px solid #607d8b; transition: all 0.5s ease; }
-        h2 { color: #455a64; font-size: 1.4rem; }
+        :root {
+            --primary-pink: #ffafbd;
+            --secondary-pink: #ffc3a0;
+            --text-color: #5d4037;
+        }
+
+        body { 
+            font-family: 'Quicksand', sans-serif; 
+            background: linear-gradient(135deg, var(--primary-pink), var(--secondary-pink)); 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            min-height: 100vh; 
+            margin: 0; 
+            padding: 20px; 
+            box-sizing: border-box; 
+            color: var(--text-color);
+        }
+
+        .card { 
+            background: rgba(255, 255, 255, 0.9); 
+            padding: 30px; 
+            border-radius: 25px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1); 
+            width: 100%;
+            max-width: 400px; 
+            text-align: center; 
+            border: 2px solid #fff;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+        }
+
+        h2 { color: #d81b60; margin-bottom: 10px; font-size: 1.6rem; }
         .hidden { display: none; }
-        .question { text-align: left; margin: 15px 0; font-size: 0.9rem; color: #555; }
-        input, select { width: 100%; padding: 10px; margin: 8px 0; border: 1px solid #cfd8dc; border-radius: 4px; box-sizing: border-box; }
-        button { background: #607d8b; color: white; border: none; padding: 12px 20px; border-radius: 4px; cursor: pointer; width: 100%; font-weight: bold; margin-top: 10px; }
-        button:hover { background: #455a64; }
         
-        /* Chỉnh sửa Terminal để chứa được ảnh */
-        #terminal { 
-            background: #263238; 
-            color: #81c784; 
-            padding: 15px; 
-            border-radius: 4px; 
-            text-align: left; 
-            font-family: 'Courier New', monospace; 
-            font-size: 0.85rem; 
-            min-height: 120px; 
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
+        .question { text-align: left; margin: 15px 0 5px 0; font-weight: 600; font-size: 0.95rem; }
+        
+        input, select, textarea { 
+            width: 100%; 
+            padding: 12px; 
+            margin: 5px 0 15px 0; 
+            border: 2px solid #ffebee; 
+            border-radius: 15px; 
+            box-sizing: border-box; 
+            font-family: inherit;
+            outline: none;
         }
 
-        /* Hiệu ứng ảnh hiện lên */
-        #flower-img {
-            max-width: 150px;
-            margin: 10px auto 0 auto;
-            border-radius: 8px;
-            display: none; /* Ẩn lúc đầu */
-            animation: fadeIn 2s forwards;
+        input:focus { border-color: var(--primary-pink); }
+
+        button { 
+            background: #ff4081; 
+            color: white; 
+            border: none; 
+            padding: 14px 20px; 
+            border-radius: 50px; 
+            cursor: pointer; 
+            width: 100%; 
+            font-weight: bold; 
+            font-size: 1rem;
+            box-shadow: 0 4px 15px rgba(255, 64, 129, 0.3);
+            transition: transform 0.2s;
         }
 
-        /* CSS cho khung tâm thư */
-        #secret-message {
-            display: none; /* Ẩn lúc đầu */
-            margin-top: 15px;
+        button:hover { transform: scale(1.05); background: #f50057; }
+
+        /* Khung chứa Voice & Quà */
+        #reveal-section {
+            animation: fadeIn 1.5s;
+        }
+
+        .audio-player {
+            margin: 20px 0;
+            background: #fff5f8;
             padding: 15px;
-            background: #f8f9fa;
-            border-left: 4px solid #607d8b;
-            border-radius: 4px;
-            text-align: left;
-            font-size: 0.95rem;
-            color: #455a64;
-            line-height: 1.6;
-            animation: fadeIn 1.5s forwards;
+            border-radius: 20px;
+            border: 1px dashed #ff4081;
+        }
+
+        #flower-img {
+            max-width: 180px;
+            border-radius: 20px;
+            margin: 15px 0;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
+            from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
+
+        .heart-icon { font-size: 3rem; color: #ff4081; margin-bottom: 10px; }
     </style>
 </head>
 <body>
 
 <div id="step1" class="card">
-    <h2>🛠 System Login</h2>
-    <p style="font-size: 0.8rem; color: #888;">Cần xác minh danh tính</p>
-    <div class="question">Nhập biệt danh của bạn:</div>
-    <input type="text" id="nickname" placeholder="Ví dụ: sâu lười...">
-    <button onclick="nextStep(1)">Bắt đầu chẩn đoán</button>
+    <div class="heart-icon">💖</div>
+    <h2>Làm quen tí nè</h2>
+    <p style="font-size: 0.9rem; color: #888;">Em điền giúp anh vài dòng nhé!</p>
+    
+    <div class="question">Họ và tên của em nek:</div>
+    <input type="text" id="fullname" placeholder="Tên gì mà nghe thương thương á...">
+    
+    <div class="question">Ngày sinh nhật:</div>
+    <input type="date" id="dob">
+    
+    <button onclick="nextStep(1)">Tiếp tục nè ✨</button>
 </div>
 
 <div id="step2" class="card hidden">
-    <h2>📊 Diagnostic Survey</h2>
-    <div class="question">1. Mức độ "muốn đấm" H đó giờ ?</div>
-    <select>
-        <option>0% - Đang vui</option>
-        <option>20% - Hơi ngứa mắt tí</option>
-        <option>50% - Đấm ngay bây giờ</option>
-        <option>80% - Đấm xong còn muốn đấm tiếp</option>
-        <option>100% - Đấm bỏ bu nó luôn</option>
+    <h2>Sở thích của em 🎈</h2>
+    
+    <div class="question">Em thích ăn món gì nhất?</div>
+    <input type="text" id="food" placeholder="Trà sữa, kem, hay là... tớ?">
+    
+    <div class="question">Em thích làm gì khi rảnh?</div>
+    <textarea id="hobby" rows="3" placeholder="Nghe nhạc, xem phim hay đi dạo..."></textarea>
+    
+    <div class="question">Em có thích nghe tớ nói không?</div>
+    <select id="likeVoice">
+        <option value="yes">Có chứ, nghe hoài không chán</option>
+        <option value="very_yes">Rất thích luôn!</option>
+        <option value="very_yes">Giống 2 cái trên :))!</option>
     </select>
-    <div class="question">2. Trạng thái hiện tại:</div>
-    <select>
-        <option>Đã tay rồi</option>
-        <option>Vẫn còn muốn đấm</option>
-    </select>
-    <button onclick="nextStep(2)">Gửi báo cáo</button>
+    
+    <button onclick="nextStep(2)">Gửi cho anh nhé nhé 💌</button>
 </div>
 
 <div id="step3" class="card hidden">
-    <h2>✅ Diagnostic Complete</h2>
-    <div id="terminal">
-        <div id="terminal-content"></div>
-        <img id="flower-img" src="hoa.jpg" alt="Bó hoa tặng bạn">
-    </div>
+    <div id="reveal-section">
+        <h2>Tặng em nè! 🎁</h2>
+        <p id="thankyou-msg"></p>
+        
+        <img id="flower-img" src="https://i.pinimg.com/originals/be/62/ca/be62ca0e1074e50257e844510b651031.gif" alt="Cute gif">
 
-    <div id="secret-message">
-       Ngày ấy chia tay, anh đau lắm, cảm giác khó chịu rất nhiều. Trước đây anh khinh thường thứ tình cảm này, trách rằng sao họ lại rơi nước mắt vì một người không phải người thân mình.
-        Giờ anh hiểu rồi, đến khi nước mắt anh rơi anh đã hiểu hết. Hiểu rằng có lẽ anh đã yêu em rồi.
-        Thật ra trước đây khi em hỏi anh thích em chỗ nào, anh nói rằng thích vì nụ cười, nó đúng đó nhưng không đủ. Thực ra anh không biết nữa, không biết sao lại dần dần rơi vào lưới tình với em nữa. Chắc do anh đã cô đơn quá lâu nên mừng rỡ khi có người bước đến nhỉ.
-        Cũng không phải, cảm giác đó rất khác, trước giờ anh chưa bao giờ coi cô đơn là nỗi buồn của mình, anh có chính thân tâm anh làm bạn mà. Nhưng từ khi em bước vào rồi anh không biết gì nữa. Sự minh mẫn mà anh tự hào trước mắt em lại như đứa trẻ, anh không giỏi đối xử với một người con gái thâm chí là yêu.
-        Vì thế mà đã gây nên cho em những tổn thương không đáng có. Anh biết rõ lỗi mình chứ, lại càng biết rõ hơn mình muốn gì mà. Nhưng cảm xúc rối bời đó lại làm anh hành động ngu ngốc như đứa trẻ vậy. Anh thật sự ghen khi em bên chàng trai khác, thực sự nhớ khi từng phút trôi qua. Em hỏi anh không bận hả, anh chỉ biết nói trả lời em luôn là nhiệm vụ ưu tiên.
-        Một khoảng thời gian sau chia tay đối với anh hoàn toàn trống rỗng và... khi anh thấy em đăng story bên người mới. Anh biết hắn, em đã từng nói. Anh đau lắm tự an ủi rằng không phải sự thật. Cả người anh run lên từng cơn nước mắt cứ lăn dài như vậy. Anh cứ như vậy xem đi xem lại đoạn story em đi trại cùng hắn, vừa xem vừa nấc lên.
-        Rồi cứ như thế trôi qua từng ngày, nỗi buồn cứ vơi đi từng chút, anh vực dậy bản thân. Anh cố gắng hơn không phải vì gì cả, chỉ vì muốn chứng tỏ, muốn nói với em rằng anh vẫn ổn. Nhưng chắc anh đã sai, anh chỉ mong cầu một tia cơ hội mong manh nào đó. Anh vẫn theo dõi em mỗi lần em cập nhật trạng thái. Xin lỗi anh vẫn chưa thể quên được. 
-        Em biết vì sao khi gặp mặt lại em anh luôn tỏ ra lạnh lùng không, dù con tim cứ gào lên không ngừng. Là anh không muốn em bận tâm về anh nữa hoặc đó chỉ là ảo tưởng của anh. Em mạnh mẽ hơn anh nghĩ rất nhiều, chắc sẽ không lưu luyến quá nhiều sau chia tay đâu. Và thực sự rằng mỗi lần gặp nhau ấy em vẫn ổn, vẫn rất ổn. Nhưng anh không ổn chút nào, những suy nghĩ cứ thôi thúc anh phải bận tâm về em. 
-        Anh ghét mình lắm và cũng biết em ghét điều này ở anh. Con người anh không mạnh mẽ như đã thể hiện bên ngoài đâu. Anh chỉ là một con người với nội tâm nhạy cảm thôi mà, đừng trách anh vì điều đó. 
-        Mọi thứ anh tưởng chừng như sẽ kết thúc theo thời gian. Anh đã dự định rằng mình sẽ xóa hết tất cả, từng dòng tin nhắn, từng bài post đã up khi xưa hết tất thảy vào đúng ngày mà anh gặp em. Em nhớ ngày đó chứ, nơi đã se duyên cho mình đó. Những ngày nay anh chìm trong hoài niệm nhưng không còn sầu não nữa. Anh vui vẻ đón nhận đó, tuy có chút buồn nhưng anh đã vượt qua được. 
-        Nhưng mà ... sao em lại một lần nữa xuất hiện mang đến cho anh một mùa xuân mới vậy ?. Tại sao ngay khi anh đã dần buông đi tất cả em lại xuất hiện với nụ cười ấy vậy. Nó đã sưởi ấm trái tim nguội lạnh của anh thêm lần nữa. Anh cố tỏ ra lạnh lùng né tránh em nhưng sao số phận cứ buộc lại vậy. Có lẽ còn chút duyên nợ chăng ? Anh đã nghĩ thế. Rồi anh một lần nữa lại dần mở lòng hơn mà chắc do anh đã tự mở cánh cửa ấy.
-        Em giỏi thật, giỏi chơi đùa trái tim anh thật. Khoảng thời gian đó mùa xuân trong anh thực sự như bùng nổ, như một đóa sen nở giữa đêm đen vậy. Xuân năm nay vui thật. Nhưng em biết lý do anh vẫn tỏ thái độ lạnh lùng đấy không, vì anh không biết rằng liệu em còn ở bên người ấy, liệu em có còn tình cảm nào không. Anh muốn hỏi. Nhưng lại thôi. Rồi anh nghĩ liệu anh còn cơ hội nào đó không. Anh bắt đầu thử bắt đầu hòa mình vào em hơn. 
-        Thú thật, anh rất muốn cảm ơn Thuận, nó là lý do để anh được gần em, được trở lại như những ngày đó. Nó vui lắm, chưa lúc nào mà anh vui như những ngày đó. Nhưng rồi anh lại nhận ra có lẽ niềm hứng thú duy nhất trong em chỉ là đưa Thuận đi chơi, chiều theo tâm ý nó. Không phải anh, anh nghĩ vậy, chắc do thấy sự lạnh nhạt từ sau lúc đó của em mà anh phán đoán vậy chăng. Mà quả thật là em đang trốn tránh anh. Xin lỗi em, xin lỗi vì đã làm phiền 
-        , xin lỗi vì những tơ tưởng đó, xin lỗi vì tất cả nhé. Nếu được quay lại anh lại muốn về lại ngày đi chơi đó, lúc cùng những người bạn của em. Anh muốn hòa đồng lắm, nhưng mà anh lại sợ. Anh không muốn cho người khác biết về bản thân mình, đặc biệt là bạn em người biết anh từng quen em. Vậy nên xin lỗi vì lúc đó đã lạnh lùng nhé. Thật ra cũng có một lý do nữa làm anh buồn lúc đó. 
-        Là khi Thuận nói với anh Đăng là "Bạch nguyệt quang" trong chùa của em. Anh cũng nghĩ vậy càng thấy tin hơn về cách em nói về nó. Đau lắm, nội tâm anh giằng xé và đau hơn khi em bảo rằng sẽ chừa lại 1 phần bánh tráng cho nó. Có lẽ trong em vẫn coi nó ở một mức độ ưu tiên hơn ít nhất với anh hiện tại chắc chắn hơn rồi. Anh nghĩ vậy.
-        Nỗi buồn cứ thế kéo dài thêm, rồi những ngày sau, dần dần em lạnh nhạt, rồi dứt hẳn. Khoảnh khắc đó anh biết rằng mình đã thua rồi. Thật sự khóc nữa rồi. Anh chưa từng lúc nào chờ những dòng tin nhắn em gửi. Cứ thế chờ mãi, thật dại khờ. Nếu anh cứ nhắn thêm, cứ liên tục thế thì em lại thêm chán ghét thôi. Ừ thôi kết thúc rồi. Lại một lần nữa đóng cửa trái tim thôi, những quyết tâm sẽ buông bỏ lại dấy lên trong anh. Những lý do mà anh ghê tởm rằng có lẽ em không tôn trọng anh vậy nên rời đi là đúng. Hoặc em vẫn còn giữ mối quan hệ với người cũ chẳng hạn. 
-        Anh không biết nữa chỉ biết nghĩ và chờ đợi. 1 ngày 2 ngày rồi 1 tuần. Rồi em lại đột nhiên nhắn lại, cánh cửa một lần nữa lại hé ra chút ánh sáng. Rồi lại lần nữa khép lại. Anh hiểu, do anh ảo tưởng, do anh ngu ngốc, do anh hết. Rồi cứ thế những ngày cứ buồn ngắn buồn dài, muốn nhắn rồi lại thôi. Có lẽ đây là lần cuối. Anh quyết tâm dứt bỏ đi thứ tình cảm này. Anh thực sự từng mơ về em rất nhiều, mơ về ngôi nhà và những hạnh phúc chỉ có cười suốt ngày. Giờ anh sẽ không mơ nữa. Cảm ơn em cho anh biết cảm giác yêu thực sự này, cảm ơn vì cho anh biết được những hạnh phúc mà anh chưa từng có trong đời. Cảm ơn em! Sau hôm nay anh sẽ buông bỏ hết. Vậy nên đừng lo nhé, anh hứa đây là lần rơi nước mắt cuối cùng thôi. Ừm chắc chắn là vậy, tạm biệt nhé... 
-    </div>
+        <div class="audio-player">
+            <p style="font-size: 0.85rem; font-weight: bold; margin-bottom: 10px;">Nhấn vào đây để nghe lời thì thầm từ anh nè:</p>
+            <audio controls style="width: 100%;">
+                <source src="hihi.mp3" type="audio/mpeg">
+                Trình duyệt của bạn không hỗ trợ phát âm thanh.
+            </audio>
+        </div>
 
-    <p style="color: #607d8b; font-weight: bold; margin-top: 15px;">🎁!</p>
+        <p style="font-size: 0.9rem; font-style: italic;">"Cảm ơn em đã xuất hiện ngay đúng lúc nhé. Anh nghĩ lúc này chính là lúc tuyệt vời nhất!"</p>
+    </div>
 </div>
 
 <script>
     function nextStep(current) {
         if (current === 1) {
-            const nick = document.getElementById('nickname').value;
-            if (!nick) { alert("Nhập đại cái tên vào đi!"); return; }
+            const name = document.getElementById('fullname').value;
+            if (!name) { alert("Em chưa nhập tên kìa!"); return; }
+            
             document.getElementById('step1').classList.add('hidden');
             document.getElementById('step2').classList.remove('hidden');
         } else if (current === 2) {
-            document.getElementById('step2').classList.add('hidden');
-            document.getElementById('step3').classList.remove('hidden');
-            runTerminal();
-        }
-    }
+            // Đổi nút thành chữ đang gửi để người ta đợi xíu
+            event.target.innerText = "Đang gửi bí mật... 💌";
+            event.target.disabled = true;
 
-    function runTerminal() {
-        const lines = [
-            "> Connecting to server...",
-            "> Fetching_data.json",
-            "> Status: [CONFIRMED]",
-            "> Processing wish...",
-            "> Chào cậu!",
-            "> cho phép tôi gửi đôi lời từ trong lòng tôi bấy lâu nhé",
-            "> Connection closed."
-        ];
-        let i = 0;
-        const termContent = document.getElementById('terminal-content');
-        const flower = document.getElementById('flower-img');
-        const message = document.getElementById('secret-message');
-        
-        function type() {
-            if (i < lines.length) {
-                termContent.innerHTML += lines[i] + "<br>";
-                i++;
-                setTimeout(type, 800);
-            } else {
-                // Khi chạy xong chữ thì hiện hoa lên
-                flower.style.display = "block";
-                // Mở rộng thẻ card để vừa ảnh và chữ
-                document.querySelector('.card').style.width = "420px";
+            // 1. Lấy toàn bộ dữ liệu người đó đã nhập
+            const data = {
+                "Họ và tên": document.getElementById('fullname').value,
+                "Ngày sinh": document.getElementById('dob').value,
+                "Món ăn thích": document.getElementById('food').value,
+                "Sở thích": document.getElementById('hobby').value,
+                "Thích nghe voice hong": document.getElementById('likeVoice').options[document.getElementById('likeVoice').selectedIndex].text
+            };
+
+            // 2. Gửi ngầm dữ liệu về Formspree
+            // THAY CÁI LINK NÀY BẰNG LINK FORMSPREE CỦA CẬU NHÉ!
+            const formspreeLink = "https://formspree.io/f/xaqvbrzr"; 
+
+            fetch(formspreeLink, {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => {
+                // 3. Gửi thành công thì chuyển sang Bước 3 (Hiện quà và Voice)
+                const name = document.getElementById('fullname').value;
+                document.getElementById('thankyou-msg').innerText = "Anh đã cất giữ cẩn thận câu trả lời của " + name + " rồi nha!";
                 
-                // Đợi thêm 1.5 giây rồi mới hiện khung tâm thư lên cho bất ngờ
-                setTimeout(() => {
-                    message.style.display = "block";
-                }, 1500);
-            }
+                document.getElementById('step2').classList.add('hidden');
+                document.getElementById('step3').classList.remove('hidden');
+            })
+            .catch(error => {
+                alert("Úi, có lỗi xíu rồi. Em thử lại nha!");
+                event.target.innerText = "Gửi cho Anh nhé 💌";
+                event.target.disabled = false;
+            });
         }
-        type();
     }
 </script>
 </body>
