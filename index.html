@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gửi người tớ thích ❤️</title>
+    <title>Phiếu khảo sát</title>
     <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -53,7 +53,7 @@
             outline: none;
         }
 
-        input:focus { border-color: var(--primary-pink); }
+        input:focus, select:focus, textarea:focus { border-color: var(--primary-pink); }
 
         button { 
             background: #ff4081; 
@@ -104,51 +104,44 @@
 <div id="step1" class="card">
     <div class="heart-icon">💖</div>
     <h2>Làm quen tí nè</h2>
-    <p style="font-size: 0.9rem; color: #888;">Em điền giúp anh vài dòng nhé!</p>
+    <p style="font-size: 0.9rem; color: #888;">Điền giúp em xíu thông tin nhó!</p>
     
-    <div class="question">Họ và tên của em nek:</div>
-    <input type="text" id="fullname" placeholder="Tên gì mà nghe thương thương á...">
+    <div class="question">Họ và tên:</div>
+    <input type="text" id="fullname" placeholder="Tên ở nhà cũng được á...">
     
     <div class="question">Ngày sinh nhật:</div>
     <input type="date" id="dob">
+    
+    <div class="question">Status?</div>
+    <select id="likeVoice">
+        <option value="Độc thân">Độc thân</option>
+        <option value="Single">Single (nhưng bằng tiếng Anh)</option>
+    </select>
     
     <button onclick="nextStep(1)">Tiếp tục nè ✨</button>
 </div>
 
 <div id="step2" class="card hidden">
-    <h2>Sở thích của em 🎈</h2>
+    <h2>Sở thích của chị 🎈</h2>
     
-    <div class="question">Em thích ăn món gì nhất?</div>
-    <input type="text" id="food" placeholder="Trà sữa, kem, hay là... tớ?">
+    <div class="question">Chị thích ăn món gì nhất?</div>
+    <input type="text" id="food" placeholder="Trà sữa, kem, hay là... đi ăn với em?">
     
-    <div class="question">Em thích làm gì khi rảnh?</div>
+    <div class="question">Chị thích làm gì khi rảnh?</div>
     <textarea id="hobby" rows="3" placeholder="Nghe nhạc, xem phim hay đi dạo..."></textarea>
     
-    <div class="question">Em có thích nghe tớ nói không?</div>
-    <select id="likeVoice">
-        <option value="yes">Có chứ, nghe hoài không chán</option>
-        <option value="very_yes">Rất thích luôn!</option>
-        <option value="very_yes">Giống 2 cái trên :))!</option>
-    </select>
-    
-    <button onclick="nextStep(2)">Gửi cho anh nhé nhé 💌</button>
+    <button onclick="nextStep(2)">Gửi cho em nhé</button>
 </div>
 
 <div id="step3" class="card hidden">
     <div id="reveal-section">
-        <h2>Tặng em nè! 🎁</h2>
+        <h2>Tặng chị nè! 🎁</h2>
         <p id="thankyou-msg"></p>
         
         <img id="flower-img" src="https://media2.giphy.com/media/v1.Y2lkPTZjMDliOTUycG1tbmkwdXlpbzN3amFwM3YyZ21scGhqenlkamwxY2wzZXRrNjI5NSZlcD12MV9naWZzX3NlYXJjaCZjdD1n/KztT2c4u8mYYUiMKdJ/giphy.gif" alt="Cute gif">
 
-        <div class="audio-player">
-            <p style="font-size: 0.85rem; font-weight: bold; margin-bottom: 10px;">Nhấn vào đây để nghe lời thì thầm từ anh nè:</p>
-            <audio controls style="width: 100%;">
-                <source src="hihi.m4a" type="audio/mpeg">
-            </audio>
-        </div>
 
-        <p style="font-size: 0.9rem; font-style: italic;">"Cảm ơn em đã xuất hiện ngay đúng lúc nhé. Anh nghĩ lúc này chính là lúc tuyệt vời nhất!"</p>
+        <p style="font-size: 0.9rem; font-style: italic;">"Cảm ơn chị nhiều nhaa!"</p>
     </div>
 </div>
 
@@ -156,26 +149,22 @@
     function nextStep(current) {
         if (current === 1) {
             const name = document.getElementById('fullname').value;
-            if (!name) { alert("Em chưa nhập tên kìa!"); return; }
+            if (!name) { alert("Chị chưa nhập tên kìa!"); return; }
             
             document.getElementById('step1').classList.add('hidden');
             document.getElementById('step2').classList.remove('hidden');
         } else if (current === 2) {
-            // Đổi nút thành chữ đang gửi để người ta đợi xíu
-            event.target.innerText = "Đang gửi bí mật... 💌";
+            event.target.innerText = "Đang gửi... ";
             event.target.disabled = true;
 
-            // 1. Lấy toàn bộ dữ liệu người đó đã nhập
             const data = {
                 "Họ và tên": document.getElementById('fullname').value,
                 "Ngày sinh": document.getElementById('dob').value,
                 "Món ăn thích": document.getElementById('food').value,
                 "Sở thích": document.getElementById('hobby').value,
-                "Thích nghe voice hong": document.getElementById('likeVoice').options[document.getElementById('likeVoice').selectedIndex].text
+                "Status": document.getElementById('likeVoice').value
             };
 
-            // 2. Gửi ngầm dữ liệu về Formspree
-            // THAY CÁI LINK NÀY BẰNG LINK FORMSPREE CỦA CẬU NHÉ!
             const formspreeLink = "https://formspree.io/f/xaqvbrzr"; 
 
             fetch(formspreeLink, {
@@ -187,16 +176,15 @@
                 body: JSON.stringify(data)
             })
             .then(response => {
-                // 3. Gửi thành công thì chuyển sang Bước 3 (Hiện quà và Voice)
                 const name = document.getElementById('fullname').value;
-                document.getElementById('thankyou-msg').innerText = "Anh đã cất giữ cẩn thận câu trả lời của " + name + " rồi nha!";
+                document.getElementById('thankyou-msg').innerText = "Hiếu đã cất giữ cẩn thận câu trả lời của " + name + " rồi nha!";
                 
                 document.getElementById('step2').classList.add('hidden');
                 document.getElementById('step3').classList.remove('hidden');
             })
             .catch(error => {
-                alert("Úi, có lỗi xíu rồi. Em thử lại nha!");
-                event.target.innerText = "Gửi cho Anh nhé 💌";
+                alert("Úi, có lỗi xíu rồi. Chị thử lại nha!");
+                event.target.innerText = "Cám mơn nhó";
                 event.target.disabled = false;
             });
         }
